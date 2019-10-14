@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "UserOrder")
 public class Order {
 
     @Id
@@ -38,4 +39,5 @@ public class Order {
 
     @ManyToMany
     private List<Product> products;
+
 }
