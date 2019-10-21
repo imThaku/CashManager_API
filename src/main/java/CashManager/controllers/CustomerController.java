@@ -18,14 +18,6 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @Autowired
-    private AdresseService adresseService;
-
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private PayementService payementService;
-
     @GetMapping("/customer")
     public List<Customer> index(){
         return this.customerService.getAllCustomers();
