@@ -7,6 +7,8 @@ import CashManager.models.product.Product;
 import CashManager.models.user.Customer;
 import CashManager.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -61,5 +63,18 @@ public class PayementController {
         this.customerService.editCustomer(customer);
 
         return payement;
+    }
+
+    @PostMapping("/payement/cheque")
+    public ResponseEntity getPayementStatusByCheque(@RequestBody Map<String, String> body) {
+        String cheque_id = body.get("cheque_value");
+        String cheque_value = body.get("cheque_value");
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/payement/card")
+    public ResponseEntity getPayementStatusBtCard(@RequestBody Map<String, String> body) {
+        String card_id = body.get("card_id");
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
