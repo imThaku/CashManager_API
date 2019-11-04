@@ -11,10 +11,19 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+server:
+  address: localhost
+  port: 8081
+
 spring:
-    application:
-        name: norsysdailycalendarapi
-    datasource:
-      url: jdbc:mysql://localhost:3306/CashManager
-      username: root
-      password:
+  datasource:
+    url: jdbc:mysql://localhost:3306/cashmanager
+    username: root
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+management:
+  security:
+    enabled: false

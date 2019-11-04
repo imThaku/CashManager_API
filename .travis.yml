@@ -25,3 +25,8 @@ jobs:
         - docker images
         - docker tag cash-manager-api $DOCKER_USERNAME/cash-manager-api
         - docker push $DOCKER_USERNAME/cash-manager-api
+    - stage: Restart Docker Container
+      script:
+        - chmod 400 my-ec2-key-pair.pem
+        - ssh -i my-ec2-key-pair.pem ec2-user@18.225.33.122
+        - docker run -d -p 4200:8080 $DOCKER_USERNAME/cash-manager-api
