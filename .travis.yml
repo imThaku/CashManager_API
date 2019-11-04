@@ -1,0 +1,28 @@
+language: java
+jdk: oraclejdk8
+
+services:
+  - docker
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle
+
+before_script:
+  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
+jobs:
+  include:
+    - stage: Build
+      script: mvn -B clean compile
+    - stage: Test
+      script: mvn test -B
+    - stage: Deploy To Docker Repository
+      if: branch = master
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t cash-manager-api .
+        - docker images
+        - docker tag cash-manager-api $DOCKER_USERNAME/cash-manager-api
+        - docker push $DOCKER_USERNAME/cash-manager-api
