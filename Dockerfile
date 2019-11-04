@@ -1,7 +1,7 @@
 FROM frolvlad/alpine-oraclejre8:slim
 VOLUME /tmp
 RUN sh -c 'touch /app.jar'
-EXPOSE 8081
+EXPOSE 8087
 ENV JAVA_OPTS=""
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /app.jar --spring.profiles.active=prod"]
 
