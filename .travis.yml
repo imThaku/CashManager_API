@@ -19,10 +19,9 @@ jobs:
     - stage: Test
       script: mvn test -B
     - stage: Deploy To Docker Repository
-      if: branch = master
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t cash-manager-api .
         - docker images
         - docker tag cash-manager-api $DOCKER_USERNAME/cash-manager-api
-        - docker push $DOCKER_USERNAME/cash-manager-api
+        - docker push 154.49.211.66:32777/cash-manager-api
