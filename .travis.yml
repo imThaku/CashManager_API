@@ -21,6 +21,6 @@ jobs:
     - stage: Deploy To Docker Repository
       script:
         - docker build -t cash-manager-api .
-        - docker tag cash-manager-api 154.49.211.66:32769/cash-manager-api
+        - docker tag cash-manager-api 154.49.211.66:32777/cash-manager-api
         - docker images
-        - docker push 154.49.211.66:32769/cash-manager-api
+        - docker push 154.49.211.66:32777/cash-manager-api
