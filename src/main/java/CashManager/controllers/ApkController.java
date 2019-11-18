@@ -17,22 +17,24 @@ import java.io.*;
 @RestController
 public class ApkController {
 
-    private static final String DIRECTORY = "C:/PDF";
-    private static final String FILE = "cashmanager.txt";
+    private static final String DIRECTORY = "./files/";
+    private static final String FILE = "cashmanager.apk";
 
-    @Autowired
-    private ServletContext servletContext;
-
-    @GetMapping("/toto.apk")
+    /**
+     * Download the CashManager application apk
+     * @return 200
+     * @throws IOException
+     */
+    @GetMapping("/client.apk")
     @ResponseBody
     public ResponseEntity<InputStreamResource> downloadApp() throws IOException {
         MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
 
-        File file = new File("");
+        File file = new File(DIRECTORY + FILE);
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok()
                 // Content-Disposition
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=cashmanager.apk")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + FILE)
                 // Content-Type
                 .contentType(mediaType)
                 // Content-Length
@@ -40,15 +42,10 @@ public class ApkController {
                 .body(resource);
     }
 
-    // http://localhost:8080/download3?fileName=abc.zip
-    // Using HttpServletResponse
-    @GetMapping("/download3")
+    @GetMapping("/client_alt.apk")
     public void downloadFile3(HttpServletResponse response) throws IOException {
-        MediaType mediaType = MediaType.TEXT_PLAIN;
-        System.out.println("fileName: " + FILE);
-        System.out.println("mediaType: " + mediaType);
-
-        File file = new File("cashmanager.txt");
+        MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        File file = new File(DIRECTORY + FILE);
 
         // Content-Type
         // application/pdf
