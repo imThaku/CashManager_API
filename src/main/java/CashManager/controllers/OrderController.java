@@ -13,6 +13,8 @@ import CashManager.models.user.Customer;
 import CashManager.models.user.Supplier;
 import CashManager.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -123,5 +125,12 @@ public class OrderController {
         return this.orderService.addNewOrder(Order.builder().total(orderDto.getTotal())
                 .products(productList)
                 .build());
+    }
+
+    @DeleteMapping("/Order/{id}")
+    public ResponseEntity deleteOrder(@PathVariable int id) {
+        orderService.deleteOrder(id);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

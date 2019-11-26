@@ -103,6 +103,7 @@ public class PayementController {
         Payement payment = new Payement();
 
         orderService.setPayment(order, payment);
+        // Todo: reset cart on success
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -121,6 +122,8 @@ public class PayementController {
         Payement payment = new Payement();
 
         orderService.setPayment(order, payment);
+
+        // Todo: reset cart on success
         return new ResponseEntity(HttpStatus.OK);
     }
 
