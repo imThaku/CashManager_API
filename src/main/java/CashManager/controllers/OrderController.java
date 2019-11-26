@@ -3,6 +3,8 @@ package CashManager.controllers;
 import CashManager.dao.PayementRepository;
 import CashManager.dto.adresse.AdresseDto;
 import CashManager.dto.adresse.AdresseTypeDto;
+import CashManager.dto.order.OrderDto;
+import CashManager.dto.product.ProductDto;
 import CashManager.models.order.Order;
 import CashManager.models.order.OrderStatus;
 import CashManager.models.payement.Payement;
@@ -102,5 +104,24 @@ public class OrderController {
     public void deleteAdresse(@PathVariable String id) {
         int orderId = Integer.parseInt(id);
         this.orderService.deleteOrder(orderId);
+    }
+
+    /**
+     * // Todo add user id to route
+     * Create an order with a list of products and a total price
+     * @param orderDto Order submitted
+     * @return Order created
+     */
+    @PostMapping("/Order/create")
+    public Order createOrder(@RequestBody OrderDto orderDto) {
+        List<Product> productList = new ArrayList<>();
+
+        for (ProductDto product : orderDto.getProductDtos()) {
+            productList.add(Product.builder().id(product.getId()).build());
+        }
+
+        return this.orderService.addNewOrder(Order.builder().total(orderDto.getTotal())
+                .products(productList)
+                .build());
     }
 }

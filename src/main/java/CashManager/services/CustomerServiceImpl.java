@@ -27,7 +27,6 @@ public class CustomerServiceImpl implements CustomerService{
         return this.customerRepository.save(customer);
     }
 
-
     public Customer editCustomer(Customer customer) {
         return this.customerRepository.save(customer);
     }

@@ -22,4 +22,14 @@ public class ProductDto {
 
     private ProductTypeDto productTypeDto;
 
+    public ProductDto() {}
+
+    public ProductDto(Integer id, String libelle, String description, Double prix, Double poid, ProductTypeDto productTypeDto) {
+        this.id = id;
+        this.libelle = libelle;
+        this.description = description;
+        this.prix = prix;
+        this.poid = poid;
+        this.productTypeDto = productTypeDto;
+    }
 }

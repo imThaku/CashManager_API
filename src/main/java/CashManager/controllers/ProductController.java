@@ -11,6 +11,7 @@ import CashManager.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,8 +45,10 @@ public class ProductController {
     @PostMapping("/product/{id}")
     public List<Product> addUserProduct(@PathVariable String id,@RequestBody ProductWraperDto body){
         Customer customer = customerService.getCustomerById(Integer.parseInt(id));
-        List<Product> productList = customer.getCart();
+        List<Product> productList = new ArrayList<Product>();
 
+        if (customer.getCart() != null)
+            productList = customer.getCart();
         for (ProductWraper productInfo:body.getProducts()) {
             for (int i = 0; i < Integer.parseInt(productInfo.getQuantity()) ; i++) {
                 Product product = this.productService.getProductById(Integer.parseInt(productInfo.getId()));
