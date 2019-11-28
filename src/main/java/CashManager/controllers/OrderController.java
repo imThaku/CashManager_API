@@ -127,7 +127,12 @@ public class OrderController {
                 .build());
     }
 
-    @DeleteMapping("/Order/{id}")
+    /***
+     * Delete the given order
+     * @param id Order id
+     * @return 200
+     */
+    @DeleteMapping("/Order/deleteOrder/{id}")
     public ResponseEntity deleteOrder(@PathVariable int id) {
         orderService.deleteOrder(id);
 

@@ -1,7 +1,9 @@
 package CashManager.controllers;
 
 import CashManager.dao.ProductRepository;
+import CashManager.dto.product.ProductDto;
 import CashManager.dto.product.ProductWraperDto;
+import CashManager.exception.InvalidPriceException;
 import CashManager.models.order.Order;
 import CashManager.models.product.Product;
 import CashManager.models.product.ProductWraper;
@@ -9,6 +11,8 @@ import CashManager.models.user.Customer;
 import CashManager.services.CustomerService;
 import CashManager.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -59,5 +63,25 @@ public class ProductController {
         customerService.editCustomer(customer);
 
         return productList;
+    }
+
+    /**
+     * Add a product to the database
+     * @param productDto Product to add
+     * @return Created product
+     */
+    @PostMapping("/product/addProduct")
+    public Product addProduct(@RequestBody ProductDto productDto){
+        if (productDto.getPrix() <= 0d)
+            throw new InvalidPriceException();
+
+        Product product = Product
+                .builder()
+                .description(productDto.getDescription())
+                .libelle(productDto.getLibelle())
+                .prix(productDto.getPrix())
+                .build();
+
+        return this.productService.addNewProduct(product);
     }
 }
