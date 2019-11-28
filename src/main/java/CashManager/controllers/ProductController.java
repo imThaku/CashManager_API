@@ -10,6 +10,7 @@ import CashManager.models.product.ProductWraper;
 import CashManager.models.user.Customer;
 import CashManager.services.CustomerService;
 import CashManager.services.ProductService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +71,7 @@ public class ProductController {
      * @param productDto Product to add
      * @return Created product
      */
+    @ApiOperation(value = "Create a new product in the database")
     @PostMapping("/product/addProduct")
     public Product addProduct(@RequestBody ProductDto productDto){
         if (productDto.getPrix() <= 0d)
