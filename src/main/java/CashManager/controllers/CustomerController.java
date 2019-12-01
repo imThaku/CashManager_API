@@ -1,6 +1,9 @@
 package CashManager.controllers;
 
+import CashManager.dto.product.ProductDto;
+import CashManager.dto.product.ProductQuantityDto;
 import CashManager.dto.product.ProductWraperDto;
+import CashManager.exception.EntityNotFoundException;
 import CashManager.models.adresse.Adresse;
 import CashManager.models.order.OrderStatus;
 import CashManager.models.payement.Payement;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,16 +58,45 @@ public class CustomerController {
     }
 
     /**
+     * Return the previous cart of the given customer.
+     * @param id customer id
+     * @return List of product with quantity
+     */
+    @GetMapping("/customer/{id}/cart")
+    public List<ProductQuantityDto> getCart(@PathVariable String id) {
+        Customer customer = customerService.getCustomerById(Integer.parseInt(id));
+        List<ProductQuantityDto> cart = new ArrayList<>();
+        boolean itemAdded = false;
+
+        if (customer == null)
+            throw new EntityNotFoundException(Customer.class);
+
+        for (Product product : customer.getCart()) {
+            for (ProductQuantityDto item : cart) {
+                if (product.getId() == item.getId()) {
+                    item.addProduct();
+                    itemAdded = true;
+                    break;
+                }
+            }
+            if (!itemAdded)
+                cart.add(new ProductQuantityDto(new ProductDto(product)));
+        }
+
+        return cart;
+    }
+
+    /**
      * Set the cart of the given customer
      * @param id Id of the customer
      * @param body List of product with their quantity in the cart
      */
     @PostMapping("/customer/{id}/cart")
-    public ResponseEntity setCart(@PathVariable String id,@RequestBody ProductWraperDto body){
+    public ResponseEntity setCart(@PathVariable String id, @RequestBody ProductWraperDto body){
         Customer customer = customerService.getCustomerById(Integer.parseInt(id));
 
         if (customer == null)
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            throw new EntityNotFoundException(Customer.class);
 
         List<Product> productList = new ArrayList<>();
 

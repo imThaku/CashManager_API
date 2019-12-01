@@ -1,6 +1,7 @@
 package CashManager.dto.product;
 
 
+import CashManager.models.product.Product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,5 +32,13 @@ public class ProductDto {
         this.prix = prix;
         this.poid = poid;
         this.productTypeDto = productTypeDto;
+    }
+
+    public ProductDto (Product product) {
+        this.id = product.getId();
+        this.libelle = product.getLibelle();
+        this.description = product.getDescription();
+        this.prix = product.getPrix();
+        this.poid = product.getPoid();
     }
 }

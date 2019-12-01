@@ -1,10 +1,8 @@
 package CashManager.controllers;
 
-import CashManager.dao.ProductRepository;
 import CashManager.dto.product.ProductDto;
 import CashManager.dto.product.ProductWraperDto;
 import CashManager.exception.InvalidPriceException;
-import CashManager.models.order.Order;
 import CashManager.models.product.Product;
 import CashManager.models.product.ProductWraper;
 import CashManager.models.user.Customer;
@@ -12,8 +10,6 @@ import CashManager.services.CustomerService;
 import CashManager.services.ProductService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
