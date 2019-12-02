@@ -11,6 +11,8 @@ public interface CustomerService {
 
     public Customer getCustomerById(Integer id);
 
+    public Customer getCustomerByUsername(String username);
+
     public Customer addNewCustomer(Customer customer);
 
     public Customer editCustomer(Customer customer);

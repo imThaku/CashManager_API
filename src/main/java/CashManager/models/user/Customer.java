@@ -30,8 +30,8 @@ public class Customer extends User {
     private List<Order> orders;
 
     @Builder
-    public Customer(Integer id, String username, String password, String Email, String firstName, String lastName, Adresse adresse, List<Payement> payements, List<Product> cart, List<Order> orders) {
-        super(id, username, password, Email, firstName, lastName, adresse);
+    public Customer(Integer id, String username, String password, String Email, String firstName, String lastName,String role, Adresse adresse, List<Payement> payements, List<Product> cart, List<Order> orders) {
+        super(id, username, password, Email, firstName, lastName,role, adresse);
         this.payements = payements;
         this.cart = cart;
         this.orders = orders;
