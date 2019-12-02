@@ -7,13 +7,15 @@ import java.util.List;
 
 public interface CustomerService {
 
-    public List<Customer> getAllCustomers();
+    List<Customer> getAllCustomers();
 
-    public Customer getCustomerById(Integer id);
+    Customer getCustomerById(Integer id);
 
     public Customer getCustomerByUsername(String username);
 
     public Customer addNewCustomer(Customer customer);
 
-    public Customer editCustomer(Customer customer);
+    Customer editCustomer(Customer customer);
+
+    void clearCart(Customer customer);
 }
