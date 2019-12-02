@@ -24,6 +24,10 @@ public class CustomerServiceImpl implements CustomerService{
         return this.customerRepository.findOne(id);
     }
 
+    public Customer getCustomerByUsername(String Username) {
+        return this.customerRepository.findCustomerByUsername(Username);
+    }
+
     public Customer addNewCustomer(Customer customer) {
         return this.customerRepository.save(customer);
     }
