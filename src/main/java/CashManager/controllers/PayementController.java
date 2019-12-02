@@ -1,5 +1,11 @@
 package CashManager.controllers;
 
+import CashManager.dto.payement.PaymentCardDto;
+import CashManager.dto.payement.PaymentChequeDto;
+import CashManager.exception.EntityNotFoundException;
+import CashManager.exception.InvalidChequeValueException;
+import CashManager.exception.MaxAttemptException;
+import CashManager.models.order.Order;
 import CashManager.models.payement.Payement;
 import CashManager.models.payement.PayementInfo;
 import CashManager.models.payement.PayementType;
@@ -7,10 +13,12 @@ import CashManager.models.product.Product;
 import CashManager.models.user.Customer;
 import CashManager.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +36,12 @@ public class PayementController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Value("${payment.maxAttempt}")
+    private int maxAttempt;
 
     @GetMapping("/payement/{id}")
     public Payement show(@PathVariable String id) {
@@ -65,16 +79,70 @@ public class PayementController {
         return payement;
     }
 
+
+    /**
+     * Pay an order using a cheque. Number of payment attempt is limited.
+     * @param dto DTO for the cheque data
+     * @return 200 if success, 404 if order not found, 400 if invalid payment
+     */
     @PostMapping("/payement/cheque")
-    public ResponseEntity getPayementStatusByCheque(@RequestBody Map<String, String> body) {
-        String cheque_id = body.get("cheque_value");
-        String cheque_value = body.get("cheque_value");
+    public ResponseEntity orderPaymentbyCheque(@RequestBody PaymentChequeDto dto) {
+        Order order = orderService.getOrderById(dto.getOrderId());
+        Customer customer = customerService.getCustomerById(dto.getCustomerId());
+
+        if (order == null)
+            throw new EntityNotFoundException(Order.class);
+        if (customer == null)
+            throw new EntityNotFoundException(Class.class);
+
+        checkAttempt(order);
+        if (dto.getChequeValue() != order.getTotal()) {
+            order.setPaymentAttempt(order.getPaymentAttempt() + 1);
+            orderService.editOrder(order);
+            throw new InvalidChequeValueException();
+        }
+
+        Payement payment = new Payement();
+
+        orderService.setPayment(order, payment);
+
+        customerService.clearCart(customer);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    /**
+     * Pay an order using a card. Number of payment attempt is limited.
+     * @param dto DTO for the cheque data
+     * @throws EntityNotFoundException 404: order or customer was not found
+     * @return 200 if success, 404 if order not found, 400 if invalid payment
+     */
     @PostMapping("/payement/card")
-    public ResponseEntity getPayementStatusBtCard(@RequestBody Map<String, String> body) {
-        String card_id = body.get("card_id");
+    public ResponseEntity orderPaymentbyCard(@RequestBody PaymentCardDto dto) {
+        Order order = orderService.getOrderById(dto.getOrderId());
+        Customer customer = customerService.getCustomerById(dto.getCustomerId());
+
+        if (order == null)
+            throw new EntityNotFoundException(Order.class);
+        if (customer == null)
+            throw new EntityNotFoundException(Class.class);
+
+        Payement payment = new Payement();
+
+        orderService.setPayment(order, payment);
+
+        customerService.clearCart(customer);
+
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    /**
+     * Check if the max amount of payment has been reached
+     * @param order Order with number of previous payment attempts
+     * @throws MaxAttemptException 400 Bad request: Max payment attempts reached
+     */
+    private void checkAttempt(Order order) {
+        if (order.getPaymentAttempt() >= maxAttempt)
+            throw new MaxAttemptException();
     }
 }

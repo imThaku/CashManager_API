@@ -18,3 +18,6 @@ spring:
       url: jdbc:mysql://localhost:3306/CashManager
       username: root
       password:
+
+payment:
+  maxAttempt: 5
