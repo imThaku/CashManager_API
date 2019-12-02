@@ -15,7 +15,7 @@ import javax.persistence.Entity;
 public class Supplier extends User {
 
     @Builder
-    public Supplier(Integer id, String username, String password, String Email, String firstName, String lastName, Adresse adresse) {
-        super(id, username, password, Email, firstName, lastName, adresse);
+    public Supplier(Integer id, String username, String password, String Email, String firstName, String lastName,String role, Adresse adresse) {
+        super(id, username, password, Email, firstName, lastName,role, adresse);
     }
 }

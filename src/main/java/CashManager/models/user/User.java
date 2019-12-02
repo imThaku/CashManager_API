@@ -28,6 +28,8 @@ public abstract class User {
 
     private String lastName;
 
+    private String role;
+
     @ManyToOne
     private Adresse adresse;
 }

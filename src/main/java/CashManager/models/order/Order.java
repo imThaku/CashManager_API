@@ -28,6 +28,8 @@ public class Order {
 
     private Date payementDate;
 
+    private int paymentAttempt = 0;
+
     @ManyToOne
     private OrderStatus orderStatus;
 

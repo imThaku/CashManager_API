@@ -3,6 +3,8 @@ package CashManager.controllers;
 import CashManager.dao.PayementRepository;
 import CashManager.dto.adresse.AdresseDto;
 import CashManager.dto.adresse.AdresseTypeDto;
+import CashManager.dto.order.OrderDto;
+import CashManager.dto.product.ProductDto;
 import CashManager.models.order.Order;
 import CashManager.models.order.OrderStatus;
 import CashManager.models.payement.Payement;
@@ -11,6 +13,8 @@ import CashManager.models.user.Customer;
 import CashManager.models.user.Supplier;
 import CashManager.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -102,5 +106,44 @@ public class OrderController {
     public void deleteAdresse(@PathVariable String id) {
         int orderId = Integer.parseInt(id);
         this.orderService.deleteOrder(orderId);
+    }
+
+    /**
+     * Create an order with a list of products and a total price
+     * @param orderDto Submitted order dto
+     * @return Created order
+     */
+    @PostMapping("/Order/create/{userId}")
+    public Order createOrder(@RequestBody OrderDto orderDto, @PathVariable int userId) {
+        List<Product> productList = new ArrayList<>();
+        Order order;
+
+        for (ProductDto product : orderDto.getProductDtos()) {
+            productList.add(Product.builder().id(product.getId()).build());
+        }
+
+        order = orderService.addNewOrder(Order.builder().total(orderDto.getTotal())
+                .products(productList)
+                .build());
+
+        Customer customer = customerService.getCustomerById(userId);
+        List<Order> orderList = customer.getOrders();
+        orderList.add(order);
+        customer.setOrders(orderList);
+        customerService.editCustomer(customer);
+
+        return order;
+    }
+
+    /***
+     * Cancel the given order
+     * @param id Order id
+     * @return 200
+     */
+    @DeleteMapping("/Order/deleteOrder/{id}")
+    public ResponseEntity deleteOrder(@PathVariable int id) {
+        orderService.deleteOrder(id);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
