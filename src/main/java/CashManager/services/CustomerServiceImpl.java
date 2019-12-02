@@ -7,6 +7,7 @@ import CashManager.models.user.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,5 +30,14 @@ public class CustomerServiceImpl implements CustomerService{
 
     public Customer editCustomer(Customer customer) {
         return this.customerRepository.save(customer);
+    }
+
+    /**
+     * Clear the cart of the given customer
+     * @param customer Customer
+     */
+    public void clearCart(Customer customer) {
+        customer.setCart(new ArrayList<Product>());
+        customerRepository.save(customer);
     }
 }

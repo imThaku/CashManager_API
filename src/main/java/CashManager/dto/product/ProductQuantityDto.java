@@ -16,7 +16,7 @@ public class ProductQuantityDto {
 
     private ProductDto product;
 
-    private int  quantity;
+    private int quantity;
 
     /**
      * Get the id of the product

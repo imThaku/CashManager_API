@@ -109,26 +109,34 @@ public class OrderController {
     }
 
     /**
-     * // Todo add user id to route
      * Create an order with a list of products and a total price
-     * @param orderDto Order submitted
-     * @return Order created
+     * @param orderDto Submitted order dto
+     * @return Created order
      */
-    @PostMapping("/Order/create")
-    public Order createOrder(@RequestBody OrderDto orderDto) {
+    @PostMapping("/Order/create/{userId}")
+    public Order createOrder(@RequestBody OrderDto orderDto, @PathVariable int userId) {
         List<Product> productList = new ArrayList<>();
+        Order order;
 
         for (ProductDto product : orderDto.getProductDtos()) {
             productList.add(Product.builder().id(product.getId()).build());
         }
 
-        return this.orderService.addNewOrder(Order.builder().total(orderDto.getTotal())
+        order = orderService.addNewOrder(Order.builder().total(orderDto.getTotal())
                 .products(productList)
                 .build());
+
+        Customer customer = customerService.getCustomerById(userId);
+        List<Order> orderList = customer.getOrders();
+        orderList.add(order);
+        customer.setOrders(orderList);
+        customerService.editCustomer(customer);
+
+        return order;
     }
 
     /***
-     * Delete the given order
+     * Cancel the given order
      * @param id Order id
      * @return 200
      */

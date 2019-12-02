@@ -11,6 +11,11 @@ import lombok.Setter;
 public class PaymentCardDto {
 
     /**
+     * CustomerId
+     */
+    private int customerId;
+
+    /**
      * Card id
      */
     private String cardId;

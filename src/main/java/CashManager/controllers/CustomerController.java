@@ -81,6 +81,7 @@ public class CustomerController {
             }
             if (!itemAdded)
                 cart.add(new ProductQuantityDto(new ProductDto(product)));
+            itemAdded = false;
         }
 
         return cart;
@@ -127,8 +128,7 @@ public class CustomerController {
 
         List<Product> productList = new ArrayList<>();
 
-        customer.setCart(null);
-        customerService.editCustomer(customer);
+        customerService.clearCart(customer);
 
         return new ResponseEntity(HttpStatus.OK);
     }

@@ -88,11 +88,13 @@ public class PayementController {
     @PostMapping("/payement/cheque")
     public ResponseEntity orderPaymentbyCheque(@RequestBody PaymentChequeDto dto) {
         Order order = orderService.getOrderById(dto.getOrderId());
-        int maxAttempt = 3;
+        Customer customer = customerService.getCustomerById(dto.getCustomerId());
 
         if (order == null)
             throw new EntityNotFoundException(Order.class);
-        // Todo: get payment attempt limit from the config file
+        if (customer == null)
+            throw new EntityNotFoundException(Class.class);
+
         checkAttempt(order);
         if (dto.getChequeValue() != order.getTotal()) {
             order.setPaymentAttempt(order.getPaymentAttempt() + 1);
@@ -103,33 +105,41 @@ public class PayementController {
         Payement payment = new Payement();
 
         orderService.setPayment(order, payment);
-        // Todo: reset cart on success
+
+        customerService.clearCart(customer);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
     /**
      * Pay an order using a card. Number of payment attempt is limited.
      * @param dto DTO for the cheque data
+     * @throws EntityNotFoundException 404: order or customer was not found
      * @return 200 if success, 404 if order not found, 400 if invalid payment
      */
     @PostMapping("/payement/card")
     public ResponseEntity orderPaymentbyCard(@RequestBody PaymentCardDto dto) {
         Order order = orderService.getOrderById(dto.getOrderId());
+        Customer customer = customerService.getCustomerById(dto.getCustomerId());
 
         if (order == null)
             throw new EntityNotFoundException(Order.class);
+        if (customer == null)
+            throw new EntityNotFoundException(Class.class);
 
         Payement payment = new Payement();
 
         orderService.setPayment(order, payment);
 
-        // Todo: reset cart on success
+        customerService.clearCart(customer);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
     /**
      * Check if the max amount of payment has been reached
-     * @param order Order with number of previous payment attemps
+     * @param order Order with number of previous payment attempts
+     * @throws MaxAttemptException 400 Bad request: Max payment attempts reached
      */
     private void checkAttempt(Order order) {
         if (order.getPaymentAttempt() >= maxAttempt)

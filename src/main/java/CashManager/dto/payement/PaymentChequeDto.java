@@ -8,6 +8,11 @@ import lombok.Setter;
 public class PaymentChequeDto {
 
     /**
+     * CustomerId
+     */
+    private int customerId;
+
+    /**
      * Cheque id
      */
     private String id;
