@@ -18,19 +18,20 @@ import java.io.*;
 public class ApkController {
 
     private static final String DIRECTORY = "./files/";
+    private static final String APK = "app-debug.apk";
     private static final String FILE = "cashmanager.apk";
 
     /**
      * Download the CashManager application apk
-     * @return 200
-     * @throws IOException
+     * @return CashManager APK
+     * @throws IOException IO exception
      */
     @GetMapping("/client.apk")
     @ResponseBody
     public ResponseEntity<InputStreamResource> downloadApp() throws IOException {
         MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
 
-        File file = new File(DIRECTORY + FILE);
+        File file = new File(DIRECTORY + APK);
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok()
                 // Content-Disposition
@@ -42,7 +43,7 @@ public class ApkController {
                 .body(resource);
     }
 
-    @GetMapping("/client_alt.apk")
+    @GetMapping("/client_not_docker.apk")
     public void downloadFile3(HttpServletResponse response) throws IOException {
         MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
         File file = new File(DIRECTORY + FILE);

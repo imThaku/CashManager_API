@@ -1,0 +1,20 @@
+FROM maven:3.5.2-jdk-8-alpine AS MAVEN_BUILD
+
+COPY pom.xml /build/
+
+COPY src /build/src/
+
+WORKDIR /build/
+
+RUN mvn package -DskipTests
+
+FROM openjdk:8-jre-alpine
+
+WORKDIR /app
+
+COPY --from=MAVEN_BUILD /build/target/CashManager-1.0-SNAPSHOT.jar /app/
+
+# Directory used to share the apk
+CMD mkdir files
+
+ENTRYPOINT ["java", "-jar", "CashManager-1.0-SNAPSHOT.jar", "--spring.profiles.active=docker"]
