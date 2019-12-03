@@ -90,11 +90,11 @@ public class PayementController {
         Order order = orderService.getOrderById(dto.getOrderId());
         Customer customer = customerService.getCustomerById(dto.getCustomerId());
 
-        if (order == null)
-            throw new EntityNotFoundException(Order.class);
-        if (customer == null)
-            throw new EntityNotFoundException(Class.class);
+        System.out.println("Payment by cheque");
+        System.out.println(dto.getChequeValue());
+        System.out.println(dto.getId());
 
+        checkEntitiesExist(order, customer);
         checkAttempt(order);
         if (dto.getChequeValue() != order.getTotal()) {
             order.setPaymentAttempt(order.getPaymentAttempt() + 1);
@@ -103,9 +103,7 @@ public class PayementController {
         }
 
         Payement payment = new Payement();
-
         orderService.setPayment(order, payment);
-
         customerService.clearCart(customer);
 
         return new ResponseEntity(HttpStatus.OK);
@@ -121,16 +119,11 @@ public class PayementController {
     public ResponseEntity orderPaymentbyCard(@RequestBody PaymentCardDto dto) {
         Order order = orderService.getOrderById(dto.getOrderId());
         Customer customer = customerService.getCustomerById(dto.getCustomerId());
-
-        if (order == null)
-            throw new EntityNotFoundException(Order.class);
-        if (customer == null)
-            throw new EntityNotFoundException(Class.class);
-
         Payement payment = new Payement();
 
+        checkEntitiesExist(order, customer);
+        checkAttempt(order);
         orderService.setPayment(order, payment);
-
         customerService.clearCart(customer);
 
         return new ResponseEntity(HttpStatus.OK);
@@ -144,5 +137,18 @@ public class PayementController {
     private void checkAttempt(Order order) {
         if (order.getPaymentAttempt() >= maxAttempt)
             throw new MaxAttemptException();
+    }
+
+    /**
+     * Test if the entities exist. Throw exception otherwise
+     * @param order Order
+     * @param customer Customer
+     * @throws EntityNotFoundException The entity does not exist in database
+     */
+    private void checkEntitiesExist(Order order, Customer customer) throws EntityNotFoundException {
+        if (order == null)
+            throw new EntityNotFoundException(Order.class);
+        if (customer == null)
+            throw new EntityNotFoundException(Customer.class);
     }
 }
