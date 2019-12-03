@@ -1,0 +1,29 @@
+version: '2'
+services:
+
+#  spring:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    expose:
+#      - "8080"
+#    depends_on:
+#      - database
+
+  database:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'cashmanager'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+    ports:
+      - "3307:3306"
+    expose:
+      - "3306"
+    volumes:
+      - my-db:/var/lib/mysql/cashmanager
+
+volumes:
+  my-db:

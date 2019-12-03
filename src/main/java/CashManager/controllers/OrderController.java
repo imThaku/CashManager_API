@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -116,7 +117,11 @@ public class OrderController {
     @PostMapping("/Order/create/{userId}")
     public Order createOrder(@RequestBody OrderDto orderDto, @PathVariable int userId) {
         List<Product> productList = new ArrayList<>();
+        Customer customer = customerService.getCustomerById(userId);
         Order order;
+
+        if (customer == null)
+            throw new EntityNotFoundException(Customer.class.getSimpleName());
 
         for (ProductDto product : orderDto.getProductDtos()) {
             productList.add(Product.builder().id(product.getId()).build());
@@ -126,7 +131,6 @@ public class OrderController {
                 .products(productList)
                 .build());
 
-        Customer customer = customerService.getCustomerById(userId);
         List<Order> orderList = customer.getOrders();
         orderList.add(order);
         customer.setOrders(orderList);
@@ -142,6 +146,11 @@ public class OrderController {
      */
     @DeleteMapping("/Order/deleteOrder/{id}")
     public ResponseEntity deleteOrder(@PathVariable int id) {
+        System.out.println("Order cancelled: " + id);
+
+        // Todo: missing cascade deletion
+        orderService.getOrderById(id);
+
         orderService.deleteOrder(id);
 
         return new ResponseEntity(HttpStatus.OK);
