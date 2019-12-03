@@ -12,24 +12,28 @@ import javax.persistence.ManyToOne;
 import java.util.List;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
 public class Customer extends User {
 
-    @ManyToOne
-    private Payement payement;
+    @ManyToMany
+    private List<Payement> payements;
 
     @ManyToMany
     private List<Product> cart;
 
-    @ManyToOne
-    private Order order;
+    @ManyToMany
+    private List<Order> orders;
 
     @Builder
-    public Customer(Integer id, String username, String password, String Email, String firstName, String lastName, Adresse adresse, Payement payement, List<Product> cart, Order order) {
+    public Customer(Integer id, String username, String password, String Email, String firstName, String lastName, Adresse adresse, List<Payement> payements, List<Product> cart, List<Order> orders) {
         super(id, username, password, Email, firstName, lastName, adresse);
-        this.payement = payement;
+        this.payements = payements;
         this.cart = cart;
-        this.order = order;
+        this.orders = orders;
     }
 }

@@ -7,6 +7,9 @@ import lombok.*;
 import javax.persistence.Entity;
 
 @Entity
+@Data
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
 public class Supplier extends User {

@@ -2,15 +2,15 @@ package CashManager.models.user;
 
 import CashManager.models.adresse.Adresse;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 @MappedSuperclass
 public abstract class User {
 
