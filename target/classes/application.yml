@@ -12,25 +12,9 @@
 # ===================================================================
 
 spring:
-  application:
-    name: norsysdailycalendarapi
-  datasource:
-    url: jdbc:mysql://localhost:3307/cashmanager
-    username: root
-    password:
-    dbcp2:
-      max-total: 1
-    tomcat:
-      max-active: 100
-      max-idle: 8
-      min-idle: 8
-      initial-size: 15
-      max-wait: 5000
-  jpa:
-    generate-ddl: true
-    hibernate:
-      ddl-auto: create
-    show-sql: true
-
-payment:
-  maxAttempt: 5
+    application:
+        name: norsysdailycalendarapi
+    datasource:
+      url: jdbc:mysql://localhost:3306/CashManager
+      username: root
+      password:
